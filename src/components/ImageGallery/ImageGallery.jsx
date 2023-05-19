@@ -13,20 +13,33 @@ function ImageGallery ({showModal, searchQuery}) {
   const [error, setError] = useState(null)
   const [status, setStatus] = useState('idle')
   const [page, setPage] = useState(1)
-  const [largeImageURL, setLargeImageURL] = useState('')
-  const [tags, setTags] = useState('')
+
+  const fetchImages = (searchQuery, page) => getImages(searchQuery, page)
+  .then(data => {
+    setImageList((hue)=> hue.concat(data.hits));
+    setTotalPage( data.totalPage);
+    setStatus('resolved')
+  } )
+  .catch(error => {setError(error); setStatus('rejected')});
 
   useEffect(() => {
-    if (searchQuery === '') return;
-    setStatus('pending');
-    getImages(searchQuery, page)
-        .then(data => {
-          setImageList((hue)=> hue.imageList.concat(data.hits));
-          setTotalPage( data.totalPage);
-          setStatus('resolved')
-        } )
-        .catch(error => {setError(error); setStatus('rejected')})
-  }, [searchQuery, page]);
+    if (!searchQuery) return 
+
+      setImageList([]);
+      setPage(1);
+      setStatus('pending')
+
+    fetchImages(searchQuery, 1)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery]);
+
+  useEffect(() => {
+    if(page === 1) return;
+
+    setStatus('pending')
+    fetchImages(searchQuery, page)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
 
 const handlerBtnClick = (e) => {
     setPage(

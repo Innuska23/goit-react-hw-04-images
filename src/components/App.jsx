@@ -8,7 +8,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export function App () {
-  const [modalImg, setModalImg] = useState({largeImageURL: '', tags: '',})
+  const [modalImg, setModalImg] = useState({largeImageURL: '', tags: ''})
   const [searchQuery, setSearchQuery] = useState('')
   const [isShowModal, setIsShowModal] = useState(false)
   
